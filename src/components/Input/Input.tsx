@@ -4,7 +4,6 @@ import { cn } from "@/libs/utils";
 
 const inputVariants = cva(
   "w-full rounded-md focus:outline-none shadow-sm transition-all duration-150 bg-white placeholder:text-gray-400",
-  // w-full bg-transparent border-b border-gray-500 pb-2 pt-6 focus:outline-none transition-all
   {
     variants: {
       size: {
@@ -29,17 +28,17 @@ const inputVariants = cva(
       tone: "default",
       disabled: false,
     },
-  }
+  },
 );
 
 export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement>,
+  extends
+    Omit<React.InputHTMLAttributes<HTMLInputElement>, "size" | "disabled">,
     VariantProps<typeof inputVariants> {
   label?: string;
   hint?: string;
   error?: string;
   id?: string;
-  size?: "sm" | "md" | "lg";
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
@@ -55,12 +54,13 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       id,
       ...props
     },
-    ref
+    ref,
   ) => {
     const inputId =
       id ||
       React.useId?.() ||
       `input-${Math.random().toString(36).slice(2, 9)}`;
+
     return (
       <div className="flex flex-col gap-1 w-full">
         {label && (
@@ -71,6 +71,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             {label}
           </label>
         )}
+
         <input
           id={inputId}
           ref={ref}
@@ -78,6 +79,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           disabled={disabled}
           {...props}
         />
+
         {error ? (
           <p className="text-sm text-red-500">{error}</p>
         ) : hint ? (
@@ -85,8 +87,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         ) : null}
       </div>
     );
-  }
+  },
 );
 
 Input.displayName = "Input";
+
 export { Input, inputVariants };
